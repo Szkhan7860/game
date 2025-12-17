@@ -1,0 +1,299 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neon Tic Tac Toe Ultimate</title>  <!-- Fonts & Icons -->  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Orbitron', sans-serif; }
+
+    body {
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0f2027, #000);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    .game-container {
+      background: rgba(10, 10, 20, 0.95);
+      padding: 25px;
+      border-radius: 18px;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 0 30px #00f7ff;
+      animation: glow 3s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 15px #00f7ff; }
+      to { box-shadow: 0 0 35px #ff00ff; }
+    }
+
+    h1 {
+      color: #00f7ff;
+      text-shadow: 0 0 12px #00f7ff;
+      margin-bottom: 10px;
+    }
+
+    .mode-select {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0 15px;
+    }
+
+    .mode-select button {
+      flex: 1;
+      margin: 0 5px;
+      padding: 6px;
+      background: transparent;
+      border: 2px solid #00f7ff;
+      color: #fff;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .mode-select button.active,
+    .mode-select button:hover {
+      background: #00f7ff;
+      color: #000;
+      box-shadow: 0 0 12px #00f7ff;
+    }
+
+    .scoreboard {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0;
+      font-size: 0.9rem;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      background: #050510;
+      border: 2px solid #00f7ff;
+      font-size: 2.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .cell:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #00f7ff;
+    }
+
+    .cell.x { color: #00f7ff; text-shadow: 0 0 15px #00f7ff; }
+    .cell.o { color: #ff00ff; text-shadow: 0 0 15px #ff00ff; }
+
+    .status {
+      min-height: 22px;
+      margin-bottom: 8px;
+    }
+
+    .controls button {
+      margin: 6px;
+      padding: 6px 14px;
+      background: transparent;
+      border: 2px solid #ff00ff;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .controls button:hover {
+      background: #ff00ff;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+
+    .socials {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+    }
+
+    .socials a {
+      font-size: 1.7rem;
+      color: #00f7ff;
+      animation: float 2.5s ease-in-out infinite;
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    .socials a:hover {
+      transform: scale(1.35);
+      color: #ff00ff;
+    }
+
+    .socials a:nth-child(2) { animation-delay: 0.5s; }
+    .socials a:nth-child(3) { animation-delay: 1s; }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+
+    .footer {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+  </style></head>
+<body><div class="game-container">
+  <h1>Neon Tic Tac Toe</h1>  <div class="mode-select">
+    <button id="pvpBtn" class="active">PVP</button>
+    <button id="aiBtn">VS AI</button>
+  </div>  <div class="scoreboard">
+    <div>X Wins: <span id="xScore">0</span></div>
+    <div>O Wins: <span id="oScore">0</span></div>
+  </div>  <div class="status" id="status">Player X's turn</div>  <div class="board" id="board"></div>  <div class="controls">
+    <button onclick="resetGame()">Restart</button>
+    <button onclick="resetScore()">Reset Score</button>
+  </div>  <div class="socials">
+    <a href="https://instagram.com/Shahnawaz._.2006" target="_blank"><i class="fab fa-instagram"></i></a>
+    <a href="https://t.me/Sukuna_Verified" target="_blank"><i class="fab fa-telegram"></i></a>
+    <a href="mailto:szcamps@gmail.com"><i class="fas fa-envelope"></i></a>
+  </div>  <div class="footer">Designed & Developed by Shahnawaz</div>
+</div><!-- Enhanced Neon Sound Effects --><audio id="clickSound" preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c8d2c7b2c.mp3?filename=interface-click-124467.mp3" type="audio/mpeg">
+</audio>
+<audio id="winSound" preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2d1b7c3f36.mp3?filename=game-win-199588.mp3" type="audio/mpeg">
+</audio>
+<audio id="drawSound" preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/30/audio_2b4f8a60cb.mp3?filename=negative_beeps-6008.mp3" type="audio/mpeg">
+</audio>
+<audio id="hoverSound" preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6f74e6a4a8.mp3?filename=ui-hover-110171.mp3" type="audio/mpeg">
+</audio><script>
+  const board = document.getElementById('board');
+  const statusText = document.getElementById('status');
+  const xScoreEl = document.getElementById('xScore');
+  const oScoreEl = document.getElementById('oScore');
+
+  const clickSound = document.getElementById('clickSound');
+  const winSound = document.getElementById('winSound');
+  const drawSound = document.getElementById('drawSound');
+
+  const pvpBtn = document.getElementById('pvpBtn');
+  const aiBtn = document.getElementById('aiBtn');
+
+  let boardState = Array(9).fill('');
+  let currentPlayer = 'X';
+  let gameActive = true;
+  let vsAI = false;
+  let xScore = 0;
+  let oScore = 0;
+
+  const winPatterns = [
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+
+  function createBoard() {
+    board.innerHTML = '';
+    boardState.forEach((_, i) => {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.addEventListener('click', () => handleMove(cell, i));
+      board.appendChild(cell);
+    });
+  }
+
+  function handleMove(cell, index) {
+    if (!gameActive || boardState[index]) return;
+
+    clickSound.play();
+    boardState[index] = currentPlayer;
+    cell.textContent = currentPlayer;
+    cell.classList.add(currentPlayer.toLowerCase());
+
+    if (checkWin()) {
+      winSound.play();
+      statusText.textContent = `Player ${currentPlayer} wins!`;
+      if (currentPlayer === 'X') xScore++; else oScore++;
+      updateScore();
+      gameActive = false;
+      return;
+    }
+
+    if (!boardState.includes('')) {
+      drawSound.play();
+      statusText.textContent = "It's a draw!";
+      gameActive = false;
+      return;
+    }
+
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    statusText.textContent = `Player ${currentPlayer}'s turn`;
+
+    if (vsAI && currentPlayer === 'O') {
+      setTimeout(aiMove, 500);
+    }
+  }
+
+  function aiMove() {
+    const emptyIndexes = boardState
+      .map((v, i) => v === '' ? i : null)
+      .filter(v => v !== null);
+
+    const randomIndex = emptyIndexes[Math.floor(Math.random() * emptyIndexes.length)];
+    const cell = board.children[randomIndex];
+    handleMove(cell, randomIndex);
+  }
+
+  function checkWin() {
+    return winPatterns.some(pattern =>
+      pattern.every(i => boardState[i] === currentPlayer)
+    );
+  }
+
+  function resetGame() {
+    boardState = Array(9).fill('');
+    currentPlayer = 'X';
+    gameActive = true;
+    statusText.textContent = "Player X's turn";
+    createBoard();
+  }
+
+  function resetScore() {
+    xScore = 0; oScore = 0;
+    updateScore();
+    resetGame();
+  }
+
+  function updateScore() {
+    xScoreEl.textContent = xScore;
+    oScoreEl.textContent = oScore;
+  }
+
+  pvpBtn.onclick = () => {
+    vsAI = false;
+    pvpBtn.classList.add('active');
+    aiBtn.classList.remove('active');
+    resetGame();
+  };
+
+  aiBtn.onclick = () => {
+    vsAI = true;
+    aiBtn.classList.add('active');
+    pvpBtn.classList.remove('active');
+    resetGame();
+  };
+
+  createBoard();
+</script></body>
+  </html>
